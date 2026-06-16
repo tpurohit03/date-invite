@@ -123,39 +123,39 @@
       padding: 18px;
       margin-top: 15px;
     }
+
     @media (max-width: 480px) {
+      .card {
+        width: 90%;
+        padding: 24px;
+      }
 
-  .card {
-    width: 90%;
-    padding: 24px;
-  }
+      h1 {
+        font-size: 28px;
+      }
 
-  h1 {
-    font-size: 28px;
-  }
+      h2 {
+        font-size: 22px;
+      }
 
-  h2 {
-    font-size: 22px;
-  }
+      p {
+        font-size: 16px;
+      }
 
-  p {
-    font-size: 16px;
-  }
+      button {
+        width: 100%;
+        margin: 8px 0;
+      }
 
-  button {
-    width: 100%;
-    margin: 8px 0;
-  }
+      .cuisine-grid {
+        grid-template-columns: 1fr;
+      }
 
-  .cuisine-grid {
-    grid-template-columns: 1fr;
-  }
-
-  input {
-    width: 100%;
-    box-sizing: border-box;
-  }
-}
+      input {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
   </style>
 </head>
 
@@ -178,48 +178,53 @@
     <p>You and our tiny VIP 👶 are invited for a special date with me.</p>
     <h2>Will you join me?</h2>
 
-    <button type="button" class="yes" onclick="goToCuisine()">Yes ❤️</button>
-    <button type="button" class="no" id="noBtn"
-onmouseover="moveNo()"
-ontouchstart="moveNo()"
-onclick="moveNo()">
-No 🙈
-</button>
+    <button type="button" class="yes" onclick="goToDate()">Yes ❤️</button>
+
+    <button 
+      type="button" 
+      class="no" 
+      id="noBtn"
+      onmouseover="moveNo()"
+      ontouchstart="moveNo()"
+      onclick="moveNo()"
+    >
+      No 🙈
+    </button>
 
     <p class="tiny">No button is only for decoration. It has no real power.</p>
   </div>
 
   <div id="step2" class="hidden">
-
     <h2>Pick a Date 🗓️</h2>
     <p>Choose a day and I'll handle the rest ❤️</p>
 
-    <input type="date" name="date" required>
+    <input type="date" name="date" id="dateInput" required>
 
-    <input type="hidden" name="message" value="Date accepted. Wife and tiny VIP are joining. Husband is chauffeur.">
+    <input 
+      type="hidden" 
+      name="message" 
+      value="Date accepted. Wife and tiny VIP are joining. Husband is chauffeur."
+    >
 
     <br><br>
-    <button type="submit" class="yes" id="submitBtn">Confirm Date ❤️</button>
-    </div>
-
-    <input type="hidden" name="cuisine" id="cuisineInput">
-
-    <br>
-    <button type="button" class="yes" onclick="goToDate()">Next ❤️</button>
+    <button type="button" class="yes" onclick="goToCuisine()">Next ❤️</button>
   </div>
 
   <div id="step3" class="hidden">
-
-    
-    <h2>Good choice 😄</h2>
-    <p>Pick your cuisine:</p>
+    <h2>Perfect ❤️</h2>
+    <p>Now tell me what you're in the mood for...</p>
 
     <div class="cuisine-grid">
       <div class="cuisine" onclick="selectCuisine('Italian 🍕', this)">Italian 🍕</div>
       <div class="cuisine" onclick="selectCuisine('Mexican 🌮', this)">Mexican 🌮</div>
       <div class="cuisine" onclick="selectCuisine('Indian 🍛', this)">Indian 🍛</div>
       <div class="cuisine" onclick="selectCuisine('Surprise Me 🎲', this)">Surprise Me 🎲</div>
-    
+    </div>
+
+    <input type="hidden" name="cuisine" id="cuisineInput">
+
+    <br><br>
+    <button type="submit" class="yes" id="submitBtn">Confirm Date ❤️</button>
   </div>
 
   <div id="success" class="hidden">
@@ -229,6 +234,7 @@ No 🙈
     <div class="success-box">
       <p><strong>Guest #1:</strong> Beautiful Wife ❤️</p>
       <p><strong>Guest #2:</strong> Tiny VIP 👶</p>
+      <p><strong>Time:</strong> To be arranged by Husband 😎</p>
       <p><strong>Transportation:</strong> Husband Chauffeur Service 🚗</p>
       <p><strong>Cost:</strong> One smile and one hug 😊</p>
     </div>
@@ -245,9 +251,21 @@ No 🙈
     no.style.top = Math.random() * 120 - 60 + "px";
   }
 
-  function goToCuisine() {
+  function goToDate() {
     document.getElementById("step1").classList.add("hidden");
     document.getElementById("step2").classList.remove("hidden");
+  }
+
+  function goToCuisine() {
+    const date = document.getElementById("dateInput").value;
+
+    if (!date) {
+      alert("Pick a date first ❤️");
+      return;
+    }
+
+    document.getElementById("step2").classList.add("hidden");
+    document.getElementById("step3").classList.remove("hidden");
   }
 
   function selectCuisine(value, element) {
@@ -260,20 +278,15 @@ No 🙈
     element.classList.add("selected");
   }
 
-  function goToDate() {
+  document.getElementById("dateForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
     const cuisine = document.getElementById("cuisineInput").value;
 
     if (!cuisine) {
       alert("Pick one cuisine first 😄");
       return;
     }
-
-    document.getElementById("step2").classList.add("hidden");
-    document.getElementById("step3").classList.remove("hidden");
-  }
-
-  document.getElementById("dateForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
 
     const form = event.target;
     const submitBtn = document.getElementById("submitBtn");
