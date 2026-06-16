@@ -1,37 +1,207 @@
-<form action="https://formspree.io/f/xqeojgpr" method="POST">
-  <h2>Will you go on a date with me? ❤️</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Date Invitation ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <button type="button" onclick="showChoices()">Yes</button>
-  <button type="button" id="noBtn" onmouseover="moveNo()">No</button>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Arial", sans-serif;
+      background: linear-gradient(135deg, #ffe1ec, #fff6d9);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
 
-  <div id="choices" style="display:none;">
-    <p>Pick cuisine:</p>
-    <select name="cuisine">
-      <option>Italian</option>
-      <option>Mexican</option>
-      <option>Indian</option>
-      <option>Surprise me</option>
-    </select>
+    .heart {
+      position: fixed;
+      color: rgba(255, 79, 139, 0.25);
+      font-size: 30px;
+      animation: float 6s infinite ease-in-out;
+    }
 
-    <p>Pick date/time:</p>
-    <input type="datetime-local" name="date_time">
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(1); opacity: 0; }
+      40% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.4); opacity: 0; }
+    }
 
-    <input type="hidden" name="message" value="Wife accepted date. Tiny boss is joining too.">
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 28px;
+      max-width: 420px;
+      width: 86%;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+      z-index: 2;
+    }
+
+    h1, h2 {
+      color: #d6336c;
+    }
+
+    p {
+      color: #555;
+      font-size: 17px;
+    }
+
+    button {
+      padding: 14px 24px;
+      margin: 10px;
+      border: none;
+      border-radius: 999px;
+      font-size: 17px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .yes {
+      background: #ff4f8b;
+      color: white;
+      box-shadow: 0 6px 15px rgba(255,79,139,0.35);
+    }
+
+    .no {
+      background: #eeeeee;
+      color: #555;
+      position: relative;
+    }
+
+    .cuisine-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .cuisine {
+      border: 2px solid #ffd1df;
+      padding: 16px;
+      border-radius: 18px;
+      cursor: pointer;
+      background: #fff7fa;
+      font-size: 16px;
+    }
+
+    .cuisine.selected {
+      background: #ff4f8b;
+      color: white;
+      border-color: #ff4f8b;
+    }
+
+    input {
+      width: 90%;
+      padding: 13px;
+      margin-top: 15px;
+      border-radius: 14px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .tiny {
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="heart" style="left:10%; animation-delay:0s;">❤️</div>
+<div class="heart" style="left:30%; animation-delay:2s;">💕</div>
+<div class="heart" style="left:70%; animation-delay:1s;">💖</div>
+<div class="heart" style="left:85%; animation-delay:3s;">❤️</div>
+
+<form 
+  class="card" 
+  action="https://formspree.io/f/xqeojgpr" 
+  method="POST"
+  id="dateForm"
+>
+  <div id="step1">
+    <h1>Exclusive Invitation ❤️</h1>
+    <p>Hello beautiful wife,</p>
+    <p>You and our tiny VIP 👶 are invited for a special date with me.</p>
+    <h2>Will you join me?</h2>
+
+    <button type="button" class="yes" onclick="goToCuisine()">Yes ❤️</button>
+    <button type="button" class="no" id="noBtn" onmouseover="moveNo()" onclick="moveNo()">No 🙈</button>
+
+    <p class="tiny">No button is only for decoration. It has no real power.</p>
+  </div>
+
+  <div id="step2" class="hidden">
+    <h2>Good choice 😄</h2>
+    <p>Pick your cuisine:</p>
+
+    <div class="cuisine-grid">
+      <div class="cuisine" onclick="selectCuisine('Italian 🍕', this)">Italian 🍕</div>
+      <div class="cuisine" onclick="selectCuisine('Mexican 🌮', this)">Mexican 🌮</div>
+      <div class="cuisine" onclick="selectCuisine('Indian 🍛', this)">Indian 🍛</div>
+      <div class="cuisine" onclick="selectCuisine('Surprise Me 🎲', this)">Surprise Me 🎲</div>
+    </div>
+
+    <input type="hidden" name="cuisine" id="cuisineInput">
+
+    <br>
+    <button type="button" class="yes" onclick="goToDate()">Next ❤️</button>
+  </div>
+
+  <div id="step3" class="hidden">
+    <h2>Pick Date & Time 🗓️</h2>
+    <p>Choose when the royal family is available.</p>
+
+    <input type="datetime-local" name="date_time" required>
+
+    <input type="hidden" name="message" value="Date accepted. Wife and tiny VIP are joining. Husband is chauffeur.">
 
     <br><br>
-    <button type="submit">Confirm Date ❤️</button>
+    <button type="submit" class="yes">Confirm Date ❤️</button>
   </div>
 </form>
 
 <script>
-function showChoices() {
-  document.getElementById("choices").style.display = "block";
-}
+  function moveNo() {
+    const no = document.getElementById("noBtn");
+    no.style.left = Math.random() * 180 - 90 + "px";
+    no.style.top = Math.random() * 120 - 60 + "px";
+  }
 
-function moveNo() {
-  const btn = document.getElementById("noBtn");
-  btn.style.position = "relative";
-  btn.style.left = Math.random() * 200 - 100 + "px";
-  btn.style.top = Math.random() * 100 - 50 + "px";
-}
+  function goToCuisine() {
+    document.getElementById("step1").classList.add("hidden");
+    document.getElementById("step2").classList.remove("hidden");
+  }
+
+  function selectCuisine(value, element) {
+    document.getElementById("cuisineInput").value = value;
+
+    document.querySelectorAll(".cuisine").forEach(item => {
+      item.classList.remove("selected");
+    });
+
+    element.classList.add("selected");
+  }
+
+  function goToDate() {
+    const cuisine = document.getElementById("cuisineInput").value;
+
+    if (!cuisine) {
+      alert("Pick one cuisine first 😄");
+      return;
+    }
+
+    document.getElementById("step2").classList.add("hidden");
+    document.getElementById("step3").classList.remove("hidden");
+  }
 </script>
+
+</body>
+</html>
