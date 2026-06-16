@@ -65,6 +65,11 @@
       box-shadow: 0 6px 15px rgba(255,79,139,0.35);
     }
 
+    .yes:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
     .no {
       background: #eeeeee;
       color: #555;
@@ -109,6 +114,14 @@
     .tiny {
       font-size: 14px;
       color: #888;
+    }
+
+    .success-box {
+      background: #fff7fa;
+      border: 2px solid #ffd1df;
+      border-radius: 20px;
+      padding: 18px;
+      margin-top: 15px;
     }
   </style>
 </head>
@@ -164,7 +177,22 @@
     <input type="hidden" name="message" value="Date accepted. Wife and tiny VIP are joining. Husband is chauffeur.">
 
     <br><br>
-    <button type="submit" class="yes">Confirm Date ❤️</button>
+    <button type="submit" class="yes" id="submitBtn">Confirm Date ❤️</button>
+  </div>
+
+  <div id="success" class="hidden">
+    <h1>Reservation Confirmed ❤️</h1>
+    <p>We are all set.</p>
+
+    <div class="success-box">
+      <p><strong>Guest #1:</strong> Beautiful Wife ❤️</p>
+      <p><strong>Guest #2:</strong> Tiny VIP 👶</p>
+      <p><strong>Transportation:</strong> Husband Chauffeur Service 🚗</p>
+      <p><strong>Cost:</strong> One smile and one hug 😊</p>
+    </div>
+
+    <h2>Pickup will be arranged by management 😄</h2>
+    <p class="tiny">A confirmation has been secretly sent to your husband.</p>
   </div>
 </form>
 
@@ -201,6 +229,40 @@
     document.getElementById("step2").classList.add("hidden");
     document.getElementById("step3").classList.remove("hidden");
   }
+
+  document.getElementById("dateForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const submitBtn = document.getElementById("submitBtn");
+    const data = new FormData(form);
+
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Confirming... ❤️";
+
+    try {
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: data,
+        headers: {
+          "Accept": "application/json"
+        }
+      });
+
+      if (response.ok) {
+        document.getElementById("step3").classList.add("hidden");
+        document.getElementById("success").classList.remove("hidden");
+      } else {
+        alert("Something went wrong. Please try again ❤️");
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Confirm Date ❤️";
+      }
+    } catch (error) {
+      alert("Network issue. Please try again ❤️");
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Confirm Date ❤️";
+    }
+  });
 </script>
 
 </body>
